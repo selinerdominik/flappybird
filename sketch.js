@@ -102,7 +102,3 @@ function keyPressed() {
     console.log('space');
   }
 }
-
-function mouseClicked() {
-    bird.up();
-}
