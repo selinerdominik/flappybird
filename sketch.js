@@ -31,7 +31,13 @@ function setup() {
   highScoreSpan = select('#hs');
   allTimeHighScoreSpan = select('#ahs');
 
-  bird = new Bird();
+  counter = 0;
+  // Resetting best bird score to 0
+    runners = [];
+    for(let i = 0; i < numberOfBirds; i++) {
+      runners[i] = new Bird();
+    }
+  pipes = [];
 
 }
 
@@ -52,53 +58,55 @@ function draw() {
         pipes.splice(i, 1);
       }
     }
-
-    bird.update();
-    bird.show();
-
-    // Check all the pipes
-    for (let j = 0; j < pipes.length; j++) {
-      // It's hit a pipe
-      if (pipes[j].hits(bird)) {
-        resetGame();
-        break;
-      }
-    }
-    if (bird.bottomTop()) {
-      resetGame();
-    }
-
-
-
-    // Add a new pipe every so often
+      // Add a new pipe every so often
     if (counter % 75 == 0) {
       pipes.push(new Pipe());
     }
+
+    for (let i = 0; i < runners.length; i++ ) {
+        let bird = runners[i];
+        bird.think(pipes);
+        bird.update();
+        bird.show();
+  
+        // Check all the pipes
+        for (let j = 0; j < pipes.length; j++) {
+          // It's hit a pipe
+          if (pipes[j].hits(bird)) {
+            loosers.push(runners.splice(i,1)[0]);
+            break;
+          }
+        }
+
+        if (bird.bottomTop()) {
+          loosers.push(runners.splice(i,1)[0]);
+        }
+    }
+
     counter++;
+      
+    if(runners.length == 0) {
+        resetGame();
+    }
   }
 
   // What is highest score of the current population
   let tempHighScore = 0;
 
-  tempHighScore = bird.score;
+    if(runners.length > 0 ) {
+  tempHighScore = runners[0].score;
   if (tempHighScore > highScore) {
-    highScore = tempHighScore;
-  }
+        highScore = tempHighScore;
+      }
 
 
-  // Update DOM Elements
-  highScoreSpan.html(tempHighScore);
-  allTimeHighScoreSpan.html(highScore);
-
+      // Update DOM Elements
+      highScoreSpan.html(tempHighScore);
+      allTimeHighScoreSpan.html(highScore);
+    }
   // Draw everything!
   for (let i = 0; i < pipes.length; i++) {
     pipes[i].show();
   }
 
-}
-function keyPressed() {
-  if (key == ' ') {
-    bird.up();
-    console.log('space');
-  }
 }
