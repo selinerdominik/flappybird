@@ -18,31 +18,15 @@ class Bird {
     this.gravity = 0.4;
     this.lift = -6;
     this.velocity = 0;
-    this.color = 'rgba(10%,10%,10%,0.25)';
 
     // Score is how many frames it's been alive
     this.score = 0;
-      this.fitness = 0;
-    this.brain = new NeuralNetwork(5,8,2);
   }
-    
-    think(pipes) {
-        let inputs = [];
-        inputs[0] = map(pipes[0].x,0,width,0,1);
-        inputs[1] = map(pipes[0].top,0,height,0,1);
-        inputs[2] = map(pipes[0].bottom,0,height,0,1);
-        inputs[3] = map(this.y,0,height,0,1);
-        inputs[4] = map(this.velocity,-20,20,0,1);
-        let action = this.brain.predict(inputs);
-        if(action[0] > action[1]) {
-            this.up();
-        }
-    }
 
   // Display the bird
   show() {
-    fill(this.color);
-    stroke(255,100);
+    fill(133);
+    stroke(255);
     ellipse(this.x, this.y, this.r * 2, this.r * 2);
   }
 
